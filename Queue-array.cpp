@@ -10,38 +10,42 @@ class Queue {
 private:
     T arr[N];
     int front, rear;
-    bool empty;
 public:
-    Queue(): front(0), rear(0), empty(true) {};
+    Queue(): front(-1), rear(-1) {};
     bool enqueue(T elem) {
-        if (!empty && rear == front) {
+        if ((front == 0 && rear == N-1) || (front == rear + 1)) {
             return false;
         }
-        empty = false;
-        arr[rear] = elem;
         rear = (rear + 1) % N;
+        arr[rear] = elem;
+        if (front == -1) {
+            front = (front + 1) % N;
+        }
         return true;
     };
     T dequeue() {
-        if (empty) {
+        if (front == -1) {
             return INT_MIN;
         }
         T elem = arr[front];
         if (front == rear) {
-            empty = true;
+            front = -1;
+            rear = -1;
         }
-        front = (front + 1) % N;
+        else {
+            front = (front + 1) % N;
+        }
         return elem;
     };
     bool print() {
-        if (empty) {
+        if (front == -1) {
             return false;
         }
         cout << "front -> ";
-        for (int i = front; i != ((rear - 1) % N); i = (i + 1) % N) {
+        for (int i = front; i != rear; i = (i + 1) % N) {
             cout << arr[i] << ", ";
         }
-        cout << arr[rear - 1];
+        cout << arr[rear];
         cout << " <- rear" << endl;
         return true;
     };
